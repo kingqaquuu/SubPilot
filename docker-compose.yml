@@ -37,7 +37,7 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-development}
       APP_NAME: ${APP_NAME:-SubPilot}
-      APP_PORT: ${APP_PORT:-8080}
+      APP_PORT: ${APP_PORT:-18080}
       API_PREFIX: ${API_PREFIX:-/api/v1}
       SERVER_READ_TIMEOUT: ${SERVER_READ_TIMEOUT:-10s}
       SERVER_WRITE_TIMEOUT: ${SERVER_WRITE_TIMEOUT:-10s}
@@ -53,7 +53,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
     ports:
-      - "${APP_PORT:-8080}:8080"
+      - "${APP_PORT:-18080}:18080"
     depends_on:
       postgres:
         condition: service_healthy

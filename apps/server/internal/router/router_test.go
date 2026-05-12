@@ -18,7 +18,7 @@ func TestHealthEndpoint(t *testing.T) {
 		App: config.AppConfig{
 			Env:  "test",
 			Name: "SubPilot",
-			Port: "8080",
+			Port: "18080",
 		},
 		Server: config.ServerConfig{
 			ReadTimeout:  10 * time.Second,
@@ -85,7 +85,7 @@ func TestSwaggerSpecIsServed(t *testing.T) {
 		App: config.AppConfig{
 			Env:  "test",
 			Name: "SubPilot",
-			Port: "8080",
+			Port: "18080",
 		},
 		API: config.APIConfig{
 			Prefix: "/api/v1",

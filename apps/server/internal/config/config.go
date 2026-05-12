@@ -116,7 +116,7 @@ func Load() (*Config, error) {
 func setDefaults(v *viper.Viper) {
 	v.SetDefault("app.env", "development")
 	v.SetDefault("app.name", "SubPilot")
-	v.SetDefault("app.port", "8080")
+	v.SetDefault("app.port", "18080")
 	v.SetDefault("server.read_timeout", "10s")
 	v.SetDefault("server.write_timeout", "10s")
 	v.SetDefault("api.prefix", "/api/v1")
