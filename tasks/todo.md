@@ -6,9 +6,12 @@
 - [x] Configure local Git identity.
 - [x] Create an initial commit on `master`.
 - [x] Create the GitHub repository. Remote provided: `https://github.com/kingqaquuu/SubPilot`.
-- [ ] Connect local `master` to the GitHub remote and push.
-- [ ] Verify local and remote repository state.
+- [x] Connect local `master` to the GitHub remote and push.
+- [x] Verify local and remote repository state.
 
 ## Review
 
-- Pending.
+- Initialized the local Git repository on `master`.
+- Configured local Git identity as `kingqaquuu <kingqaquuu@outlook.com>`.
+- Added `origin` remote: `https://github.com/kingqaquuu/SubPilot`.
+- Pushed `master` to GitHub and set upstream tracking.
