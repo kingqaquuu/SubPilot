@@ -20,6 +20,7 @@ func New(cfg *config.Config, log *zap.Logger) *gin.Engine {
 	engine.Use(requestLogger(log))
 	engine.NoRoute(NoRoute)
 
+	engine.StaticFile("/docs/swagger.yaml", "./docs/swagger.yaml")
 	engine.GET("/swagger/*any", swaggerPlaceholder)
 
 	api := engine.Group(cfg.API.Prefix)

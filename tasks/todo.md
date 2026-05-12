@@ -74,3 +74,21 @@
 - Added the Go backend module with config loading, Zap logger setup, Gin router, unified response helper, health endpoint, and Swagger scaffold.
 - Added the backend Dockerfile and example YAML config.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, and `GET /api/v1/health`.
+
+---
+
+# Phase 1 Review Fixes Todo
+
+- [x] Review reported Phase 1 issues.
+- [x] Serve Swagger spec at the path advertised by the placeholder endpoint.
+- [x] Prevent production startup with default development secrets.
+- [x] Add config loading tests for environment variables and secret validation.
+- [x] Run Go tests, build, Compose config, and health endpoint verification.
+- [x] Commit and push Phase 1 review fixes.
+
+## Review
+
+- Served `docs/swagger.yaml` through `/docs/swagger.yaml` and added route coverage.
+- Added explicit environment variable bindings and config tests for env loading and production secret validation.
+- Added a Docker entrypoint guard that rejects default development secrets when `APP_ENV=production`.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, `GET /api/v1/health`, `GET /docs/swagger.yaml`, and production default secret rejection.

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -53,5 +55,53 @@ func TestHealthEndpoint(t *testing.T) {
 	}
 	if body.Data.Service != "SubPilot" || body.Data.Status != "ok" {
 		t.Fatalf("unexpected health payload: %+v", body.Data)
+	}
+}
+
+func TestSwaggerSpecIsServed(t *testing.T) {
+	tmpDir := t.TempDir()
+	docsDir := filepath.Join(tmpDir, "docs")
+	if err := os.MkdirAll(docsDir, 0o755); err != nil {
+		t.Fatalf("create docs dir: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(docsDir, "swagger.yaml"), []byte("openapi: 3.0.3\n"), 0o644); err != nil {
+		t.Fatalf("write swagger spec: %v", err)
+	}
+
+	previousDir, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("get cwd: %v", err)
+	}
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := os.Chdir(previousDir); err != nil {
+			t.Fatalf("restore cwd: %v", err)
+		}
+	})
+
+	cfg := &config.Config{
+		App: config.AppConfig{
+			Env:  "test",
+			Name: "SubPilot",
+			Port: "8080",
+		},
+		API: config.APIConfig{
+			Prefix: "/api/v1",
+		},
+	}
+
+	engine := New(cfg, zap.NewNop())
+	req := httptest.NewRequest(http.MethodGet, "/docs/swagger.yaml", nil)
+	rec := httptest.NewRecorder()
+
+	engine.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+	if rec.Body.String() != "openapi: 3.0.3\n" {
+		t.Fatalf("unexpected swagger body: %q", rec.Body.String())
 	}
 }

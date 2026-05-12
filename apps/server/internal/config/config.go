@@ -1,6 +1,8 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -62,6 +64,9 @@ func Load() (*Config, error) {
 	v.AutomaticEnv()
 
 	setDefaults(v)
+	if err := bindEnv(v); err != nil {
+		return nil, err
+	}
 
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
@@ -69,7 +74,7 @@ func Load() (*Config, error) {
 		}
 	}
 
-	return &Config{
+	cfg := &Config{
 		App: AppConfig{
 			Env:  v.GetString("app.env"),
 			Name: v.GetString("app.name"),
@@ -99,7 +104,13 @@ func Load() (*Config, error) {
 			Secret:    v.GetString("jwt.secret"),
 			ExpiresIn: v.GetDuration("jwt.expires_in"),
 		},
-	}, nil
+	}
+
+	if err := cfg.Validate(); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
 }
 
 func setDefaults(v *viper.Viper) {
@@ -120,4 +131,49 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("redis.db", 0)
 	v.SetDefault("jwt.secret", "")
 	v.SetDefault("jwt.expires_in", "24h")
+}
+
+func bindEnv(v *viper.Viper) error {
+	envBindings := map[string]string{
+		"app.env":              "APP_ENV",
+		"app.name":             "APP_NAME",
+		"app.port":             "APP_PORT",
+		"server.read_timeout":  "SERVER_READ_TIMEOUT",
+		"server.write_timeout": "SERVER_WRITE_TIMEOUT",
+		"api.prefix":           "API_PREFIX",
+		"postgres.host":        "POSTGRES_HOST",
+		"postgres.port":        "POSTGRES_PORT",
+		"postgres.database":    "POSTGRES_DB",
+		"postgres.user":        "POSTGRES_USER",
+		"postgres.password":    "POSTGRES_PASSWORD",
+		"redis.host":           "REDIS_HOST",
+		"redis.port":           "REDIS_PORT",
+		"redis.password":       "REDIS_PASSWORD",
+		"redis.db":             "REDIS_DB",
+		"jwt.secret":           "JWT_SECRET",
+		"jwt.expires_in":       "JWT_EXPIRES_IN",
+	}
+
+	for key, env := range envBindings {
+		if err := v.BindEnv(key, env); err != nil {
+			return fmt.Errorf("bind env %s: %w", env, err)
+		}
+	}
+
+	return nil
+}
+
+func (c *Config) Validate() error {
+	if c.App.Env != "production" {
+		return nil
+	}
+
+	if c.Postgres.Password == "" || c.Postgres.Password == "change-me" {
+		return errors.New("POSTGRES_PASSWORD must be set to a non-default value in production")
+	}
+	if c.JWT.Secret == "" || c.JWT.Secret == "change-me-to-a-long-random-secret" {
+		return errors.New("JWT_SECRET must be set to a non-default value in production")
+	}
+
+	return nil
 }
