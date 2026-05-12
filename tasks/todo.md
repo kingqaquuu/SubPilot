@@ -31,3 +31,22 @@
 - Added `docs/development-spec.md`, then revised it after user feedback to avoid duplicating `AGENTS.md`.
 - The document now focuses on concrete phases, prerequisites, deliverables, implementation tasks, acceptance criteria, exit gates, dependencies, and release milestones.
 - Added `tasks/lessons.md` to record that phase-plan documents should reference `AGENTS.md` instead of repeating its rules.
+
+---
+
+# Phase 0 Project Baseline Todo
+
+- [x] Review Phase 0 scope in `docs/development-spec.md`.
+- [x] Confirm the repository has no conflicting local changes.
+- [x] Create base directory structure.
+- [x] Add `.gitignore`.
+- [x] Add `.env.example`.
+- [x] Add initial `README.md`.
+- [x] Verify no real secrets are committed.
+- [x] Commit and push Phase 0 baseline.
+
+## Review
+
+- Created the Phase 0 base directory structure with `.gitkeep` placeholders for empty directories.
+- Added `.gitignore`, `.env.example`, and initial `README.md`.
+- Verified `.env.example` uses placeholder values and no real secrets were introduced.

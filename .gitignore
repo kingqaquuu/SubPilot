@@ -1,0 +1,56 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Go
+bin/
+*.test
+*.out
+coverage.out
+vendor/
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.local
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+ios/Pods/
+ios/.symlinks/
+android/.gradle/
+
+# Docker / local runtime
+docker-data/
+tmp/
+*.pid
+
+# Generated secrets and certificates
+*.pem
+*.key
+*.crt
