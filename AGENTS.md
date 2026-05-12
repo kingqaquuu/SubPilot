@@ -456,6 +456,12 @@ style:
 test:
 ```
 
+### Commit Message Detail
+
+- Every commit message must include as many key details as possible.
+- Use a concise subject plus a body that explains what changed, why it changed, and how it was verified.
+- Historical commits should be rewritten or supplemented when their messages lack enough detail.
+
 ---
 
 ## Documentation Rules
