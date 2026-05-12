@@ -50,3 +50,27 @@
 - Created the Phase 0 base directory structure with `.gitkeep` placeholders for empty directories.
 - Added `.gitignore`, `.env.example`, and initial `README.md`.
 - Verified `.env.example` uses placeholder values and no real secrets were introduced.
+
+---
+
+# Phase 1 Local Infrastructure And Backend Skeleton Todo
+
+- [x] Review Phase 1 scope in `docs/development-spec.md`.
+- [x] Confirm the repository has no conflicting local changes.
+- [x] Create PostgreSQL, Redis, and backend services in Docker Compose.
+- [x] Create Go backend module.
+- [x] Add configuration loading from environment and optional config file.
+- [x] Add structured logger initialization.
+- [x] Add Gin router with `/api/v1/health`.
+- [x] Add unified response helper.
+- [x] Add Swagger scaffolding.
+- [x] Add backend Dockerfile.
+- [x] Verify backend tests/build and Docker startup path.
+- [x] Commit and push Phase 1 skeleton.
+
+## Review
+
+- Added Docker Compose services for PostgreSQL, Redis, and the backend server.
+- Added the Go backend module with config loading, Zap logger setup, Gin router, unified response helper, health endpoint, and Swagger scaffold.
+- Added the backend Dockerfile and example YAML config.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, and `GET /api/v1/health`.

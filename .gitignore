@@ -27,6 +27,7 @@ bin/
 *.out
 coverage.out
 vendor/
+apps/server/server
 
 # Node / Vite
 node_modules/
