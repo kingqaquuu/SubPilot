@@ -59,6 +59,9 @@ func TestCategoryServiceCreateListUpdateAndDelete(t *testing.T) {
 	if deleted.ID != created.ID {
 		t.Fatalf("unexpected deleted category: %+v", deleted)
 	}
+	if !categories.clearedCategoryRefs[categoryRefKey{userID: userID, categoryID: created.ID}] {
+		t.Fatal("expected delete to clear same-user subscription category references")
+	}
 
 	listed, err = service.List(context.Background(), userID)
 	if err != nil {
@@ -111,6 +114,9 @@ func TestCategoryServiceRejectsCrossUserAccess(t *testing.T) {
 	if _, err := service.Delete(context.Background(), otherUserID, created.ID); !errors.Is(err, ErrCategoryNotFound) {
 		t.Fatalf("expected not found for cross-user delete, got %v", err)
 	}
+	if categories.clearedCategoryRefs[categoryRefKey{userID: otherUserID, categoryID: created.ID}] {
+		t.Fatal("did not expect cross-user delete to clear subscription category references")
+	}
 }
 
 func TestCategoryServiceMapsRepositoryDuplicateName(t *testing.T) {
@@ -132,15 +138,22 @@ func TestCategoryServiceRejectsInvalidInput(t *testing.T) {
 }
 
 type fakeCategoryRepository struct {
-	byID      map[uuid.UUID]*model.Category
-	createErr error
-	updateErr error
+	byID                map[uuid.UUID]*model.Category
+	clearedCategoryRefs map[categoryRefKey]bool
+	createErr           error
+	updateErr           error
 }
 
 func newFakeCategoryRepository() *fakeCategoryRepository {
 	return &fakeCategoryRepository{
-		byID: map[uuid.UUID]*model.Category{},
+		byID:                map[uuid.UUID]*model.Category{},
+		clearedCategoryRefs: map[categoryRefKey]bool{},
 	}
+}
+
+type categoryRefKey struct {
+	userID     uuid.UUID
+	categoryID uuid.UUID
 }
 
 func (r *fakeCategoryRepository) Create(ctx context.Context, category *model.Category) error {
@@ -211,6 +224,7 @@ func (r *fakeCategoryRepository) Update(ctx context.Context, category *model.Cat
 }
 
 func (r *fakeCategoryRepository) Delete(ctx context.Context, category *model.Category) error {
+	r.clearedCategoryRefs[categoryRefKey{userID: category.UserID, categoryID: category.ID}] = true
 	delete(r.byID, category.ID)
 	return nil
 }

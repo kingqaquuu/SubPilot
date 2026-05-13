@@ -66,5 +66,13 @@ func (r *gormCategoryRepository) Update(ctx context.Context, category *model.Cat
 }
 
 func (r *gormCategoryRepository) Delete(ctx context.Context, category *model.Category) error {
-	return r.db.WithContext(ctx).Delete(category).Error
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Model(&model.Subscription{}).
+			Where("user_id = ? AND category_id = ?", category.UserID, category.ID).
+			Update("category_id", nil).Error; err != nil {
+			return err
+		}
+
+		return tx.Delete(category).Error
+	})
 }

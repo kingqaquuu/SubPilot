@@ -181,3 +181,20 @@
 - Added Swagger docs for category create/list/update/delete endpoints.
 - Added focused service and handler tests for CRUD flow, duplicate names, invalid input, missing auth, invalid IDs, and ownership boundaries.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `JWT_SECRET=phase4-local-secret docker compose config`, Docker startup, health endpoint, auth login, category create/list/update/delete, and `docker compose down`.
+
+---
+
+# Phase 4 Category Review Fixes Todo
+
+- [x] Create and review `docs/specs/phase-04-review-fixes.md`.
+- [x] Clear same-user subscription category references when deleting a category.
+- [x] Add delete side-effect tests.
+- [x] Verify Go tests, build, and Compose config.
+- [x] Commit and push Phase 4 review fixes.
+
+## Review
+
+- Added `docs/specs/phase-04-review-fixes.md` before implementation according to SDD.
+- Updated category deletion to clear same-user subscription `category_id` references inside the same GORM transaction before soft deleting the category.
+- Added service test coverage proving category deletion clears only the current user's category references and does not clear references for a failed cross-user delete.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, and `JWT_SECRET=phase4-local-secret docker compose config`.
