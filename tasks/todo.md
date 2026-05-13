@@ -115,3 +115,28 @@
 - Added MVP models for users, categories, subscriptions, reminders, and payment records with timestamps, soft delete support, user isolation fields, and query indexes.
 - Added repository interfaces and initial GORM-backed implementations for all MVP tables.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, `GET /api/v1/health`, database migration logs, MVP table creation, and key indexes.
+
+---
+
+# Phase 3 Authentication Todo
+
+- [x] Create and review `docs/specs/phase-03-authentication.md`.
+- [x] Add auth DTOs for register, login, auth response, and current user response.
+- [x] Add JWT token manager with signing, expiry, parsing, and validation.
+- [x] Add auth service for register, login, password hashing, and current user lookup.
+- [x] Add auth middleware and context helpers.
+- [x] Add auth handler endpoints.
+- [x] Wire auth routes into router.
+- [x] Update Swagger docs for auth endpoints and bearer auth.
+- [x] Add tests for token manager, service, middleware, and handler behavior.
+- [x] Verify Go tests, build, Compose config, Docker startup, auth endpoints, and stored password hash.
+- [x] Commit and push Phase 3 authentication.
+
+## Review
+
+- Added `docs/specs/phase-03-authentication.md` before implementation according to SDD.
+- Added auth DTOs, JWT token manager, auth context helpers, auth middleware, auth service, and auth handler endpoints.
+- Wired `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, and protected `GET /api/v1/auth/me` into the router.
+- Updated Swagger docs with auth endpoints and bearer auth.
+- Added focused tests for JWT behavior, auth service behavior, middleware authorization, and handler auth flow.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, register/login/me flows, missing token `401`, invalid credentials `401`, and stored bcrypt password hash.

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/model"
@@ -36,4 +37,16 @@ func (r *gormUserRepository) FindByEmail(ctx context.Context, email string) (*mo
 	}
 
 	return &user, nil
+}
+
+func (r *gormUserRepository) EmailExists(ctx context.Context, email string) (bool, error) {
+	var user model.User
+	if err := r.db.WithContext(ctx).Select("id").First(&user, "email = ?", email).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+		return false, err
+	}
+
+	return true, nil
 }

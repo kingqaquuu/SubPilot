@@ -4,13 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/auth"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/config"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/handler"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/middleware"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/repository"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/response"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/service"
 	"go.uber.org/zap"
 )
 
-func New(cfg *config.Config, log *zap.Logger) *gin.Engine {
+func New(cfg *config.Config, log *zap.Logger, repos repository.Repositories, tokens *auth.TokenManager) *gin.Engine {
 	if cfg.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -27,6 +31,15 @@ func New(cfg *config.Config, log *zap.Logger) *gin.Engine {
 	{
 		healthHandler := handler.NewHealthHandler(cfg)
 		api.GET("/health", healthHandler.Check)
+
+		authService := service.NewAuthService(repos.Users, tokens)
+		authHandler := handler.NewAuthHandler(authService)
+		authRoutes := api.Group("/auth")
+		{
+			authRoutes.POST("/register", authHandler.Register)
+			authRoutes.POST("/login", authHandler.Login)
+			authRoutes.GET("/me", middleware.Auth(tokens), authHandler.Me)
+		}
 	}
 
 	return engine

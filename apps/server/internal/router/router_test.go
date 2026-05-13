@@ -9,8 +9,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/auth"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/config"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/repository"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 func TestHealthEndpoint(t *testing.T) {
@@ -29,7 +32,7 @@ func TestHealthEndpoint(t *testing.T) {
 		},
 	}
 
-	engine := New(cfg, zap.NewNop())
+	engine := New(cfg, zap.NewNop(), repository.New(&gorm.DB{}), testTokenManager(t))
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/health", nil)
 	rec := httptest.NewRecorder()
 
@@ -92,7 +95,7 @@ func TestSwaggerSpecIsServed(t *testing.T) {
 		},
 	}
 
-	engine := New(cfg, zap.NewNop())
+	engine := New(cfg, zap.NewNop(), repository.New(&gorm.DB{}), testTokenManager(t))
 	req := httptest.NewRequest(http.MethodGet, "/docs/swagger.yaml", nil)
 	rec := httptest.NewRecorder()
 
@@ -104,4 +107,15 @@ func TestSwaggerSpecIsServed(t *testing.T) {
 	if rec.Body.String() != "openapi: 3.0.3\n" {
 		t.Fatalf("unexpected swagger body: %q", rec.Body.String())
 	}
+}
+
+func testTokenManager(t *testing.T) *auth.TokenManager {
+	t.Helper()
+
+	tokenManager, err := auth.NewTokenManager("test-secret", time.Hour)
+	if err != nil {
+		t.Fatalf("new token manager: %v", err)
+	}
+
+	return tokenManager
 }

@@ -9,10 +9,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/auth"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/config"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/database"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/logger"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/migration"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/repository"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/router"
 	"go.uber.org/zap"
 )
@@ -46,7 +48,13 @@ func main() {
 	}
 	log.Info("database connected and migrated")
 
-	engine := router.New(cfg, log)
+	tokenManager, err := auth.NewTokenManager(cfg.JWT.Secret, cfg.JWT.ExpiresIn)
+	if err != nil {
+		log.Fatal("auth token manager failed", zap.Error(err))
+	}
+
+	repos := repository.New(db)
+	engine := router.New(cfg, log, repos, tokenManager)
 	server := &http.Server{
 		Addr:         ":" + cfg.App.Port,
 		Handler:      engine,
