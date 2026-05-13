@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -36,6 +37,25 @@ func TestTokenManagerRejectsInvalidToken(t *testing.T) {
 
 	if _, err := manager.Parse("not-a-token"); err == nil {
 		t.Fatal("expected invalid token error")
+	}
+}
+
+func TestTokenManagerRejectsExpiredToken(t *testing.T) {
+	now := time.Date(2026, 5, 13, 10, 0, 0, 0, time.UTC)
+	manager, err := NewTokenManager("test-secret", time.Hour)
+	if err != nil {
+		t.Fatalf("new token manager: %v", err)
+	}
+	manager.now = func() time.Time { return now }
+
+	token, err := manager.Generate(uuid.New())
+	if err != nil {
+		t.Fatalf("generate token: %v", err)
+	}
+
+	manager.now = func() time.Time { return now.Add(2 * time.Hour) }
+	if _, err := manager.Parse(token); !errors.Is(err, ErrInvalidToken) {
+		t.Fatalf("expected invalid token error for expired token, got %v", err)
 	}
 }
 

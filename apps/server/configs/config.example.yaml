@@ -25,5 +25,5 @@ redis:
   db: 0
 
 jwt:
-  secret: change-me-to-a-long-random-secret
+  secret: ""
   expires_in: 24h

@@ -140,3 +140,22 @@
 - Updated Swagger docs with auth endpoints and bearer auth.
 - Added focused tests for JWT behavior, auth service behavior, middleware authorization, and handler auth flow.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, register/login/me flows, missing token `401`, invalid credentials `401`, and stored bcrypt password hash.
+
+---
+
+# Phase 3 Authentication Review Fixes Todo
+
+- [x] Create and review `docs/specs/phase-03-review-fixes.md`.
+- [x] Map database duplicate email conflicts to the existing auth conflict error.
+- [x] Require an explicit non-default JWT secret for Docker Compose startup.
+- [x] Add JWT expiration regression coverage.
+- [x] Verify Go tests, build, Compose config failure/success, and entrypoint secret rejection.
+- [x] Commit and push Phase 3 review fixes.
+
+## Review
+
+- Added `docs/specs/phase-03-review-fixes.md` before implementation according to SDD.
+- Mapped Postgres unique constraint errors from user creation to the existing duplicate email auth error.
+- Required Docker Compose callers to provide `JWT_SECRET` explicitly and rejected the committed default secret at entrypoint startup.
+- Added JWT expiration regression coverage and non-production default JWT secret config coverage.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config` missing-secret failure, `JWT_SECRET=local-review-fix-secret docker compose config`, default-secret entrypoint rejection, and non-default entrypoint success.

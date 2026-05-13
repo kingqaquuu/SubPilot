@@ -52,7 +52,7 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       REDIS_DB: ${REDIS_DB:-0}
-      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set to a non-default value}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
     ports:
       - "${APP_PORT:-18080}:18080"

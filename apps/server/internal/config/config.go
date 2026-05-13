@@ -168,6 +168,10 @@ func bindEnv(v *viper.Viper) error {
 }
 
 func (c *Config) Validate() error {
+	if c.JWT.Secret == "change-me-to-a-long-random-secret" {
+		return errors.New("JWT_SECRET must be set to a non-default value")
+	}
+
 	if c.App.Env != "production" {
 		return nil
 	}
@@ -175,7 +179,7 @@ func (c *Config) Validate() error {
 	if c.Postgres.Password == "" || c.Postgres.Password == "change-me" {
 		return errors.New("POSTGRES_PASSWORD must be set to a non-default value in production")
 	}
-	if c.JWT.Secret == "" || c.JWT.Secret == "change-me-to-a-long-random-secret" {
+	if c.JWT.Secret == "" {
 		return errors.New("JWT_SECRET must be set to a non-default value in production")
 	}
 

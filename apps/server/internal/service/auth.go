@@ -54,6 +54,9 @@ func (s *AuthService) Register(ctx context.Context, req dto.RegisterRequest) (*d
 		Name:         strings.TrimSpace(req.Name),
 	}
 	if err := s.users.Create(ctx, user); err != nil {
+		if errors.Is(err, repository.ErrDuplicateEmail) {
+			return nil, ErrEmailAlreadyExists
+		}
 		return nil, fmt.Errorf("create user: %w", err)
 	}
 

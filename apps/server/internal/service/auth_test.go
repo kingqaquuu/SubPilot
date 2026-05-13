@@ -10,6 +10,7 @@ import (
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/auth"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/dto"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/model"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -67,6 +68,21 @@ func TestAuthServiceRejectsDuplicateEmail(t *testing.T) {
 	}
 }
 
+func TestAuthServiceMapsRepositoryDuplicateEmail(t *testing.T) {
+	users := newFakeUserRepository()
+	users.createErr = repository.ErrDuplicateEmail
+	service := NewAuthService(users, newTestTokenManager(t))
+
+	_, err := service.Register(context.Background(), dto.RegisterRequest{
+		Email:    "user@example.com",
+		Password: "password123",
+		Name:     "User",
+	})
+	if !errors.Is(err, ErrEmailAlreadyExists) {
+		t.Fatalf("expected duplicate email error, got %v", err)
+	}
+}
+
 func TestAuthServiceRejectsInvalidCredentials(t *testing.T) {
 	users := newFakeUserRepository()
 	service := NewAuthService(users, newTestTokenManager(t))
@@ -118,8 +134,9 @@ func newTestTokenManager(t *testing.T) *auth.TokenManager {
 }
 
 type fakeUserRepository struct {
-	byID    map[uuid.UUID]*model.User
-	byEmail map[string]*model.User
+	byID      map[uuid.UUID]*model.User
+	byEmail   map[string]*model.User
+	createErr error
 }
 
 func newFakeUserRepository() *fakeUserRepository {
@@ -130,6 +147,9 @@ func newFakeUserRepository() *fakeUserRepository {
 }
 
 func (r *fakeUserRepository) Create(ctx context.Context, user *model.User) error {
+	if r.createErr != nil {
+		return r.createErr
+	}
 	if user.ID == uuid.Nil {
 		user.ID = uuid.New()
 	}

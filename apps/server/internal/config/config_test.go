@@ -59,6 +59,16 @@ func TestLoadRejectsDefaultProductionSecrets(t *testing.T) {
 	}
 }
 
+func TestLoadRejectsDefaultJWTSecretOutsideProduction(t *testing.T) {
+	t.Setenv("APP_ENV", "development")
+	t.Setenv("JWT_SECRET", "change-me-to-a-long-random-secret")
+
+	_, err := loadFromTempDirWithError(t)
+	if err == nil {
+		t.Fatal("expected default jwt secret to be rejected")
+	}
+}
+
 func TestLoadAllowsProductionWithNonDefaultSecrets(t *testing.T) {
 	t.Setenv("APP_ENV", "production")
 	t.Setenv("POSTGRES_PASSWORD", "prod-postgres-password")

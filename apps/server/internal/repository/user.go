@@ -5,9 +5,12 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/model"
 	"gorm.io/gorm"
 )
+
+var ErrDuplicateEmail = errors.New("duplicate email")
 
 type gormUserRepository struct {
 	db *gorm.DB
@@ -18,7 +21,14 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (r *gormUserRepository) Create(ctx context.Context, user *model.User) error {
-	return r.db.WithContext(ctx).Create(user).Error
+	if err := r.db.WithContext(ctx).Create(user).Error; err != nil {
+		if isUniqueViolation(err) {
+			return ErrDuplicateEmail
+		}
+		return err
+	}
+
+	return nil
 }
 
 func (r *gormUserRepository) FindByID(ctx context.Context, id uuid.UUID) (*model.User, error) {
@@ -49,4 +59,9 @@ func (r *gormUserRepository) EmailExists(ctx context.Context, email string) (boo
 	}
 
 	return true, nil
+}
+
+func isUniqueViolation(err error) bool {
+	var pgErr *pgconn.PgError
+	return errors.As(err, &pgErr) && pgErr.Code == "23505"
 }

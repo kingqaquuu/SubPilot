@@ -66,7 +66,7 @@ func (m *TokenManager) Parse(tokenString string) (uuid.UUID, error) {
 			return nil, ErrInvalidToken
 		}
 		return m.secret, nil
-	}, jwt.WithExpirationRequired(), jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
+	}, jwt.WithExpirationRequired(), jwt.WithTimeFunc(m.now), jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("%w: %v", ErrInvalidToken, err)
 	}
