@@ -92,3 +92,26 @@
 - Added explicit environment variable bindings and config tests for env loading and production secret validation.
 - Added a Docker entrypoint guard that rejects default development secrets when `APP_ENV=production`.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, `GET /api/v1/health`, `GET /docs/swagger.yaml`, and production default secret rejection.
+
+---
+
+# Phase 2 Database Foundation Todo
+
+- [x] Create and review `docs/specs/phase-02-database-foundation.md`.
+- [x] Extend config with PostgreSQL SSL mode and DSN support.
+- [x] Add `internal/database` connection package.
+- [x] Add `internal/model` base model and MVP models.
+- [x] Add `internal/migration` runner.
+- [x] Wire database connection and migration into backend startup.
+- [x] Add repository interfaces and initial GORM implementations.
+- [x] Add unit tests for DSN and migration model coverage.
+- [x] Verify Go tests, build, Compose config, Docker startup, health endpoint, and MVP tables.
+- [x] Commit and push Phase 2 database foundation.
+
+## Review
+
+- Added `docs/specs/phase-02-database-foundation.md` before implementation according to SDD.
+- Added PostgreSQL SSL mode config, DSN construction, GORM database connection, and startup migration flow.
+- Added MVP models for users, categories, subscriptions, reminders, and payment records with timestamps, soft delete support, user isolation fields, and query indexes.
+- Added repository interfaces and initial GORM-backed implementations for all MVP tables.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config`, `docker compose up --build -d`, `GET /api/v1/health`, database migration logs, MVP table creation, and key indexes.

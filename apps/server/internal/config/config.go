@@ -39,6 +39,7 @@ type PostgresConfig struct {
 	Database string
 	User     string
 	Password string
+	SSLMode  string
 }
 
 type RedisConfig struct {
@@ -93,6 +94,7 @@ func Load() (*Config, error) {
 			Database: v.GetString("postgres.database"),
 			User:     v.GetString("postgres.user"),
 			Password: v.GetString("postgres.password"),
+			SSLMode:  v.GetString("postgres.ssl_mode"),
 		},
 		Redis: RedisConfig{
 			Host:     v.GetString("redis.host"),
@@ -125,6 +127,7 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("postgres.database", "subpilot")
 	v.SetDefault("postgres.user", "subpilot")
 	v.SetDefault("postgres.password", "")
+	v.SetDefault("postgres.ssl_mode", "disable")
 	v.SetDefault("redis.host", "localhost")
 	v.SetDefault("redis.port", "6379")
 	v.SetDefault("redis.password", "")
@@ -146,6 +149,7 @@ func bindEnv(v *viper.Viper) error {
 		"postgres.database":    "POSTGRES_DB",
 		"postgres.user":        "POSTGRES_USER",
 		"postgres.password":    "POSTGRES_PASSWORD",
+		"postgres.ssl_mode":    "POSTGRES_SSL_MODE",
 		"redis.host":           "REDIS_HOST",
 		"redis.port":           "REDIS_PORT",
 		"redis.password":       "REDIS_PASSWORD",

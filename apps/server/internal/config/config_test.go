@@ -18,6 +18,7 @@ func TestLoadReadsEnvironmentVariables(t *testing.T) {
 	t.Setenv("POSTGRES_DB", "test_db")
 	t.Setenv("POSTGRES_USER", "test_user")
 	t.Setenv("POSTGRES_PASSWORD", "test_password")
+	t.Setenv("POSTGRES_SSL_MODE", "require")
 	t.Setenv("REDIS_HOST", "cache")
 	t.Setenv("REDIS_PORT", "16379")
 	t.Setenv("REDIS_PASSWORD", "redis_password")
@@ -36,7 +37,7 @@ func TestLoadReadsEnvironmentVariables(t *testing.T) {
 	if cfg.Server.ReadTimeout != 3*time.Second || cfg.Server.WriteTimeout != 4*time.Second {
 		t.Fatalf("unexpected server timeouts: %+v", cfg.Server)
 	}
-	if cfg.Postgres.Host != "db" || cfg.Postgres.Port != "15432" || cfg.Postgres.Database != "test_db" || cfg.Postgres.User != "test_user" || cfg.Postgres.Password != "test_password" {
+	if cfg.Postgres.Host != "db" || cfg.Postgres.Port != "15432" || cfg.Postgres.Database != "test_db" || cfg.Postgres.User != "test_user" || cfg.Postgres.Password != "test_password" || cfg.Postgres.SSLMode != "require" {
 		t.Fatalf("unexpected postgres config: %+v", cfg.Postgres)
 	}
 	if cfg.Redis.Host != "cache" || cfg.Redis.Port != "16379" || cfg.Redis.Password != "redis_password" || cfg.Redis.DB != 2 {

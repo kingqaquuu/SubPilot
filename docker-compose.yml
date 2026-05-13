@@ -6,6 +6,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-subpilot}
       POSTGRES_USER: ${POSTGRES_USER:-subpilot}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_SSL_MODE: ${POSTGRES_SSL_MODE:-disable}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -46,6 +47,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-subpilot}
       POSTGRES_USER: ${POSTGRES_USER:-subpilot}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_SSL_MODE: ${POSTGRES_SSL_MODE:-disable}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}

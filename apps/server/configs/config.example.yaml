@@ -16,6 +16,7 @@ postgres:
   database: subpilot
   user: subpilot
   password: change-me
+  ssl_mode: disable
 
 redis:
   host: localhost

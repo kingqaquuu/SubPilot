@@ -10,7 +10,9 @@ import (
 	"time"
 
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/config"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/database"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/logger"
+	"github.com/kingqaquuu/SubPilot/apps/server/internal/migration"
 	"github.com/kingqaquuu/SubPilot/apps/server/internal/router"
 	"go.uber.org/zap"
 )
@@ -28,6 +30,21 @@ func main() {
 	defer func() {
 		_ = log.Sync()
 	}()
+
+	db, err := database.Open(cfg.Postgres)
+	if err != nil {
+		log.Fatal("database connection failed", zap.Error(err))
+	}
+	defer func() {
+		if err := database.Close(db); err != nil {
+			log.Error("database close failed", zap.Error(err))
+		}
+	}()
+
+	if err := migration.Run(db); err != nil {
+		log.Fatal("database migration failed", zap.Error(err))
+	}
+	log.Info("database connected and migrated")
 
 	engine := router.New(cfg, log)
 	server := &http.Server{
