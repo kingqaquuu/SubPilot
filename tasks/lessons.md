@@ -13,3 +13,8 @@
 
 - Commit messages must include key details whenever possible: what changed, why it changed, and how it was verified.
 - When existing commit messages are too terse, supplement or rewrite them instead of leaving unclear history.
+
+## Spec-Driven Development
+
+- Non-trivial work must start with a spec in `docs/specs/` before implementation.
+- Specs must include requirements, non-goals, design, task breakdown, acceptance criteria, verification plan, and traceability.

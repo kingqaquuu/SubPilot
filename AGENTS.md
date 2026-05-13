@@ -77,6 +77,29 @@ License:
 
 ## Workflow Orchestration
 
+### Spec-Driven Development
+
+- All non-trivial work must follow Spec-Driven Development (SDD).
+- Before implementation, create or update a spec under `docs/specs/`.
+- A spec must exist and be reviewed before writing production code for a phase or feature.
+- Implementation must trace back to explicit spec items.
+- If requirements, design, API contracts, data models, tasks, or verification expectations change, update the spec before changing code.
+- Do not mark a phase or feature complete until every acceptance criterion and verification item in the spec has been satisfied.
+
+### Spec File Requirements
+
+Each spec must include:
+
+- Requirements
+- Non-goals
+- Design
+- Data model changes, when applicable
+- API contract changes, when applicable
+- Task breakdown
+- Acceptance criteria
+- Verification plan
+- Traceability notes mapping implementation and tests back to spec items
+
 ### Plan Node Default
 
 - Any non-trivial task, including tasks with 3+ steps or architecture decisions, must enter planning mode first.
@@ -123,12 +146,13 @@ License:
 
 ## Task Management
 
-1. Plan first: write the plan to `tasks/todo.md` as a checkable checklist.
-2. Validate the plan: check in before implementation.
-3. Track progress: mark each item as soon as it is completed.
-4. Explain changes: provide a high-level summary for each step.
-5. Record results: append a review section to the end of `tasks/todo.md`.
-6. Capture lessons: after corrections, update `tasks/lessons.md`.
+1. Spec first: create or update the relevant `docs/specs/*.md` file before implementation.
+2. Plan second: write the implementation plan to `tasks/todo.md` as a checkable checklist.
+3. Validate the spec and plan before implementation.
+4. Track progress: mark each item as soon as it is completed.
+5. Explain changes: provide a high-level summary for each step.
+6. Record results: append a review section to the end of `tasks/todo.md`.
+7. Capture lessons: after corrections, update `tasks/lessons.md`.
 
 ---
 

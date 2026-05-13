@@ -4,6 +4,8 @@
 
 This document is the concrete implementation plan for SubPilot. Project principles, stack choices, repository layout, API rules, testing commands, and workflow rules are defined in `AGENTS.md` and are not repeated here.
 
+SubPilot uses Spec-Driven Development. Before implementing any non-trivial phase or feature, create or update the corresponding spec under `docs/specs/` and use that spec as the implementation contract.
+
 Each phase below defines:
 
 - Objective
