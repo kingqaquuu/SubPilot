@@ -198,3 +198,25 @@
 - Updated category deletion to clear same-user subscription `category_id` references inside the same GORM transaction before soft deleting the category.
 - Added service test coverage proving category deletion clears only the current user's category references and does not clear references for a failed cross-user delete.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, and `JWT_SECRET=phase4-local-secret docker compose config`.
+
+---
+
+# Phase 5 Subscription Management Todo
+
+- [x] Create and review `docs/specs/phase-05-subscription-management.md`.
+- [x] Add subscription DTOs and pagination DTO.
+- [x] Extend subscription repository with filters, count, update, and delete.
+- [x] Add subscription service validation and category ownership checks.
+- [x] Add subscription handler and authenticated routes.
+- [x] Update Swagger docs.
+- [x] Add service and handler tests for subscription behavior.
+- [x] Verify Go tests, build, Compose config, Docker smoke flow, and subscription API behavior.
+- [x] Commit and push Phase 5 subscription management.
+
+## Review
+
+- Added `docs/specs/phase-05-subscription-management.md` before implementation according to SDD.
+- Added subscription DTOs, paginated list response, service validation, category ownership checks, repository filtering/count/update/delete methods, HTTP handler, and authenticated routes.
+- Added Swagger docs for subscription create/list/detail/update/delete endpoints.
+- Added focused service and handler tests for CRUD flow, ownership boundaries, foreign category rejection, pagination, filters, invalid input, missing auth, and invalid IDs.
+- Verified `GOCACHE=/tmp/subpilot-go-cache go test ./...`, `GOCACHE=/tmp/subpilot-go-cache go build -o /tmp/subpilot-server ./cmd/server`, `JWT_SECRET=phase5-local-secret docker compose config`, Docker startup, health endpoint, auth register, subscription create/list/detail/update/delete, and `docker compose down`.

@@ -27,7 +27,18 @@ type CategoryRepository interface {
 type SubscriptionRepository interface {
 	Create(ctx context.Context, subscription *model.Subscription) error
 	FindByIDForUser(ctx context.Context, id uuid.UUID, userID uuid.UUID) (*model.Subscription, error)
-	ListByUser(ctx context.Context, userID uuid.UUID, limit int, offset int) ([]model.Subscription, error)
+	ListByUser(ctx context.Context, filter SubscriptionFilter) ([]model.Subscription, int64, error)
+	Update(ctx context.Context, subscription *model.Subscription) error
+	Delete(ctx context.Context, subscription *model.Subscription) error
+}
+
+type SubscriptionFilter struct {
+	UserID       uuid.UUID
+	Status       model.SubscriptionStatus
+	CategoryID   *uuid.UUID
+	BillingCycle model.BillingCycle
+	Limit        int
+	Offset       int
 }
 
 type ReminderRepository interface {

@@ -50,6 +50,17 @@ func New(cfg *config.Config, log *zap.Logger, repos repository.Repositories, tok
 			categoryRoutes.PUT("/:id", categoryHandler.Update)
 			categoryRoutes.DELETE("/:id", categoryHandler.Delete)
 		}
+
+		subscriptionService := service.NewSubscriptionService(repos.Subscriptions, repos.Categories)
+		subscriptionHandler := handler.NewSubscriptionHandler(subscriptionService)
+		subscriptionRoutes := api.Group("/subscriptions", middleware.Auth(tokens))
+		{
+			subscriptionRoutes.POST("", subscriptionHandler.Create)
+			subscriptionRoutes.GET("", subscriptionHandler.List)
+			subscriptionRoutes.GET("/:id", subscriptionHandler.Detail)
+			subscriptionRoutes.PUT("/:id", subscriptionHandler.Update)
+			subscriptionRoutes.DELETE("/:id", subscriptionHandler.Delete)
+		}
 	}
 
 	return engine
