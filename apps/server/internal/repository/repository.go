@@ -18,7 +18,10 @@ type UserRepository interface {
 type CategoryRepository interface {
 	Create(ctx context.Context, category *model.Category) error
 	FindByIDForUser(ctx context.Context, id uuid.UUID, userID uuid.UUID) (*model.Category, error)
+	FindByNameForUser(ctx context.Context, name string, userID uuid.UUID) (*model.Category, error)
 	ListByUser(ctx context.Context, userID uuid.UUID) ([]model.Category, error)
+	Update(ctx context.Context, category *model.Category) error
+	Delete(ctx context.Context, category *model.Category) error
 }
 
 type SubscriptionRepository interface {

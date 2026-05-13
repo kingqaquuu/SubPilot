@@ -40,6 +40,16 @@ func New(cfg *config.Config, log *zap.Logger, repos repository.Repositories, tok
 			authRoutes.POST("/login", authHandler.Login)
 			authRoutes.GET("/me", middleware.Auth(tokens), authHandler.Me)
 		}
+
+		categoryService := service.NewCategoryService(repos.Categories)
+		categoryHandler := handler.NewCategoryHandler(categoryService)
+		categoryRoutes := api.Group("/categories", middleware.Auth(tokens))
+		{
+			categoryRoutes.POST("", categoryHandler.Create)
+			categoryRoutes.GET("", categoryHandler.List)
+			categoryRoutes.PUT("/:id", categoryHandler.Update)
+			categoryRoutes.DELETE("/:id", categoryHandler.Delete)
+		}
 	}
 
 	return engine

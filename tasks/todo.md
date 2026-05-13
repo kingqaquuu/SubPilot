@@ -159,3 +159,25 @@
 - Required Docker Compose callers to provide `JWT_SECRET` explicitly and rejected the committed default secret at entrypoint startup.
 - Added JWT expiration regression coverage and non-production default JWT secret config coverage.
 - Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `docker compose config` missing-secret failure, `JWT_SECRET=local-review-fix-secret docker compose config`, default-secret entrypoint rejection, and non-default entrypoint success.
+
+---
+
+# Phase 4 Category Management Todo
+
+- [x] Create and review `docs/specs/phase-04-category-management.md`.
+- [x] Add category DTOs.
+- [x] Extend category repository methods for update, delete, and name lookup.
+- [x] Add category service validation and user-scoped operations.
+- [x] Add category handler and authenticated routes.
+- [x] Update Swagger docs.
+- [x] Add service and handler tests for category behavior.
+- [x] Verify Go tests, build, Compose config, Docker smoke flow, and category API behavior.
+- [x] Commit and push Phase 4 category management.
+
+## Review
+
+- Added `docs/specs/phase-04-category-management.md` before implementation according to SDD.
+- Added category DTOs, service validation, repository update/delete/name lookup methods, HTTP handler, and authenticated routes.
+- Added Swagger docs for category create/list/update/delete endpoints.
+- Added focused service and handler tests for CRUD flow, duplicate names, invalid input, missing auth, invalid IDs, and ownership boundaries.
+- Verified `go test ./...`, `go build -o /tmp/subpilot-server ./cmd/server`, `JWT_SECRET=phase4-local-secret docker compose config`, Docker startup, health endpoint, auth login, category create/list/update/delete, and `docker compose down`.
